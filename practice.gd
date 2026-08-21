@@ -673,7 +673,22 @@ func directions_to_coordinates(move_sequence_path: Array[Vector2], start: Vector
 
 
 
-
+## time for more functions! (i had to add some sort of punctuation) (yeah, that's not really the right tone).
+## this function will check for duplicates in an array,
+## and then return the indices of the array at which doubles were found
+func check_for_duplicate_values_in_array(array_to_check: Array):
+	# how this might work??
+	# loop through the array (probably using while loop that acts like my usual for loop)
+	# use .count()
+	# see if the value is a number greater than 1
+	# we want to find the indices of the first occurance to the last occurance (idc about the ones in between for 3+ occurances)
+	# uhh, yeah, i'll probably be able to do that
+	# might have to loop using index, though
+	# and have too many variables
+	# well, i guess the value with the lowest index should be prioritized first
+	# any "counted" duplicates between the 2 indices of the first value with duplicates should be removed
+	
+	pass
 
 
 
