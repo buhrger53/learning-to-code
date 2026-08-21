@@ -692,11 +692,9 @@ func check_for_duplicate_values_in_array(array_to_check: Array):
 
 
 
-# evil doo doo code that i should accidentally push
-func uhh():
-	while(true):
-		uhh()
-		pass
+
+
+
 
 
 
