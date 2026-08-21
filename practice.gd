@@ -692,11 +692,9 @@ func check_for_duplicate_values_in_array(array_to_check: Array):
 
 
 
-# definitely cool code that i should definitely push
-func uhh():
-	while(false):
-		uhh()
-		pass
+
+
+
 
 
 
