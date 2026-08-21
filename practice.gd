@@ -176,6 +176,19 @@ var grid_of_area: Array[Array] = [
 # when we compute the final path array with vector2 coords telling where to go, we should loop through the array, checking for later coords that match previous ones
 # if we find one like that, then we should just delete all the coords from here to there (inclusive)
 
+# hmmm, i wonder if i could add some thing that checks for obstacles...
+# oh, wait, i can!
+# i should add another parameter to the generate path array thing
+# with some override variable
+# oh, shoot, this is complicated
+# steps:
+# add some override to the things that first makes the path try to go closer to the end/target first
+# then, try to generate a path that goes away from the target first (might be a little harder to implement)
+# actually add the override parameters to the functions
+# compare the lengths of the functions
+# wait, maybe i don't have to do this, since my code already deletes extra steps if it finds double coords...
+# hmmm...
+
 
 
 # maybe i want the grid to be larger, so i'm going to add miximum values
@@ -191,7 +204,7 @@ var grid_of_area: Array[Array] = [
 ## checking the nearby spaces the turtle is allowed to move to, through vector2.direction.
 ## returns an array with the vector2 directions (not coordinates on a grid this time) that can be added onto a position.
 ## i probably should've made this async
-func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Array[Vector2], traceback_path: Array[Vector2], traceback_path2: Array[Vector2], trace_travel_mode: int, map_end_x_0_index: int, map_end_y_0_index: int) -> Array[Vector2]:
+func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Array[Vector2], traceback_path: Array[Vector2], traceback_path2: Array[Vector2], trace_travel_mode: int, map_end_x_0_index: int, map_end_y_0_index: int, end: Vector2) -> Array[Vector2]:
 	## note: this will (be used to) return some stuff at the end.
 	## don't use yet
 	## edit: "deprecated"
@@ -422,6 +435,20 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 	# so much more simpler
 	# i think this works
 	
+	
+	print()
+	print("starting step 2.5...")
+	print("seeing if the end is right onto the next move...")	
+	for direction in direction_passed_steps.duplicate():
+		if direction + current_position == end:
+			direction_passed_steps = [direction]
+			print()
+			print("are we there yet??")
+			print()
+			break
+		else:
+			print("nah")
+	
 	print()
 	print("starting step 3...")
 	
@@ -516,7 +543,7 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 					# it might bug things, though
 					# erase the direction if the targeted position goes onto one of the coords in the traceback_path
 					if target_position == coord and direction_passed_steps.has(direction):
-						print(direction, " wasn't fit to live, since it was on the traceback_path2, which is coord ", target_position, " or coord ", coord)
+						print(direction, " wasn't fit to live, since it was on the traceback_path2, which is coord ", coord)
 						direction_passed_steps.erase(direction)
 						break # hopefully this works, right?
 			
@@ -584,6 +611,7 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 		#pass
 	# nvm i'm just gonna handle this in the main function
 	# too much work adding another argument
+	# yeah nvm guys i handled it in this function (step 2.5)
 	
 	
 	#return [] # wait returning this by default is actually goated, unless all the nearby spaces get taken
@@ -593,6 +621,7 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 	# seems i might need some code to see when "this" (get it?) function returns an empty array
 	# so then i'd know to switch modes
 	# seems i might have to return another value that has to be checked for if i wanted to change the mode from within this function, because the mode is handled inside the other function
+	# yeah who knew what he was thinking as he wrote that
 	
 	# uhh yeah
 	# anyways
@@ -601,6 +630,80 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 	print("returning move options...")
 	print(direction_passed_steps)
 	return direction_passed_steps
+
+
+
+
+## supposedly, nesting is bad
+## and i should make extra functions
+## converts an array of Vector2.directions to coords, from a starting position
+func directions_to_coordinates(move_sequence_path: Array[Vector2], start: Vector2) -> Array[Vector2]:
+	
+	## passing the path by value, just cuz.
+	## the path with the directions of moves inside it.
+	## i could've gave it a better name than "path"
+	## yeah i don't think this variable is necessary since i didn't edit anything
+	#var path := move_sequence_path.duplicate()
+	
+	## array that holds the converted coords
+	var coords: Array[Vector2] = []
+	
+	# how the conversion should work
+	# get some array that holds the coords
+	
+	# keep track of position through a variable
+	# for loop some thing that loops through the things of the path array
+	# for every iteration of the loop, add the current position through a variable
+	
+	## the position being tracked, so we can do some array stuff
+	var current_position := start
+	
+	# loop
+	# was it really this easy?
+	for direction in move_sequence_path:
+		current_position += direction
+		coords.append(current_position)
+	
+	
+	
+	
+	# return the newly generated coords
+	return coords
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## short function that just checks for repeated coordinates, and then deletes stuff if it finds repeating coordinates.
+## yeah so far idk how this would actually work
+func optimize_path(move_sequence_path: Array[Vector2], start: Vector2, end: Vector2) -> Array[Vector2]:
+	# yeah idk how to do this
+	# steps:
+	# read the move_sequence_path array
+	# convert to coordinates (into a new array)
+	var coords = directions_to_coordinates(move_sequence_path, start)
+	
+	
+	# check for coordinates that have duplicates
+	# index them
+	# using magical code (that has backwards functionality, maybe like getting some values to do a "reverse" .slice()),
+	# delete the extra coords
+	# if the first coord in the converted coordinate array is the start coord, undo it
+	# uhh, somehow convert the coords back into moves?
+	# wait, nvm, i can just delete the same amount of values from the move_sequence_path array, since they should have the same ones
+	# i guess do that thing with the first move being "Vector2(0, 0)" in the move_sequence_path array having to be deleted
+	return move_sequence_path # update this
 
 
 
@@ -614,8 +717,16 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 
 
 ## function for creating the path the turtle will take
-func generate_path(grid: Array[Array]) -> Array[Vector2]:
-	# dang, this function really just does take the grid as it's only argument
+func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Array[Vector2]:
+	# dang, this function really just does take the grid as its only argument
+	# guess not anymore
+	
+	## i updated this to a [variable] to avoid accidentally (somehow) mutating the original grid.
+	## i mean a [variable that was passed by value].
+	## this was added at the same time i added the second parameter/argument...
+	## whoops i had a typo
+	var grid_copy = grid.duplicate(true)
+	
 	
 	## where the turtle starts
 	var start: Vector2 = Vector2(0,0)
@@ -631,23 +742,23 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 	## the amount of 0 indexed rows in the grid
 	var x_row_count = 0
 	
-	for i in grid.size(): # vertical, y
+	for i in grid_copy.size(): # vertical, y
 		if i > y_column_count:
 			y_column_count = i;
-		for j in grid[i].size(): # horizontal, x
+		for j in grid_copy[i].size(): # horizontal, x
 			if j > x_row_count:
 				x_row_count = j
 			# 	the current row column value (grid[i][j]) being looped through
 			# is equal to 2, signifying it's the starting square
-			if grid[i][j] == 2:
+			if grid_copy[i][j] == 2:
 				start = Vector2(j, i)
 				print("start: ", start)
 			# current value being read = 3, the end
-			if grid[i][j] == 3:
+			if grid_copy[i][j] == 3:
 				end = Vector2(j, i)
 				print("end: ", end)
 			# obstacles, which are 0
-			if grid[i][j] == 0:
+			if grid_copy[i][j] == 0:
 				obstacles.append(Vector2(j,i))
 	
 	for value in obstacles:
@@ -659,7 +770,8 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 	## the path we've moved along so far.
 	## should i include our starting square?
 	## might as well, since it's going to get included sooner or later.
-	## nvm, just realized adding the starting square would bug it, since the uhh moving already adds it
+	## nvm, just realized adding the starting square would bug it, since the uhh moving already adds it.
+	## well, i guess i added the starting square anyways in the end
 	var traceback_path: Array[Vector2] = [] # something about appending
 	# 	as we are rerouting by going backwards along the path, i should pop the values from this
 	# traceback_path to another traceback array like it, but instead it starts the moment on the coord we get stuck
@@ -667,7 +779,8 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 	# 	there's definitely going to be bugs with trying to go to a different area, or as we're going along the first traceback path,
 	# my logic might break and bug and stuff with the connections to the 2nd traceback_path
 	
-	## the second traceback path, not actually sure how this will work, mb
+	## the second traceback path, not actually sure how this will work, mb.
+	## i guess the code has comments somewhere about how it works
 	var traceback_path2: Array[Vector2] = []
 	
 	## 	 it seems we are going to have 2 modes.
@@ -676,7 +789,8 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 	## 	 along our original traceback_path and check for available other spaces every step.
 	## 	 sounds a little complicated and unoptimized imo.
 	## -1 = we are on traceback_path, just exploring and not moving back.
-	## 1 = it's time to go back, actually. try to travel along the traceback_path, while not going on traceback_path2, and 
+	## 1 = it's time to go back, actually. try to travel along theO traceback_path, while not going on traceback_path2, and 
+	## uhh what was he going to say
 	var trace_travel_mode: int = -1
 	# it seems gdscript doesn't have unions
 	# so hopefully we'll remember it will only take -1 or 1
@@ -692,7 +806,7 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 	var loop_iteration_count = 0
 	
 	## variable cuz why not
-	var max_loop_iterations = 10
+	var max_loop_iterations = max_loop_iterations_argument
 	
 	# probably put some loop code here
 	# that runs the one function above
@@ -710,29 +824,49 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 	var _traceback_path2_copy: Array[Vector2] = []
 	
 	## array that holds the sequence of moves
-	var return_this_array: Array[Vector2] = []
+	var optimize_this_array: Array[Vector2] = []
 	
 	while (tested_position != end) and (loop_iteration_count < max_loop_iterations):
 		loop_iteration_count += 1 # yeah im just gonna put it at the top
 		print()
-		print("loop iteration #: ", loop_iteration_count)
+		# uhh, zero indexed, trust?
+		# yeah idk about this actually
 		print()
+		print("loop iteration #: ", loop_iteration_count - 1, " + 1")
+		print()
+		
 		# this print statement (below) says that because i put another print statement that tells if the function (check available spaces to move to) is running
 		# so this one tells when it runs inside of the while loop, which is in the "main" function
 		# maybe someday it wouldn't be the main function
-		# when (or if) this function has to be run multiple times itself...
+		# when (or if) this function has to be run multiple times itself... (i might just recursion)
 		print("running the function, but in the loop...")
-		returned_moves = check_available_spaces_to_move_to(tested_position, obstacles, traceback_path, traceback_path2, trace_travel_mode, x_row_count, y_column_count)
+		returned_moves = check_available_spaces_to_move_to(tested_position, obstacles, traceback_path, traceback_path2, trace_travel_mode, x_row_count, y_column_count, end)
 		# i guess move order will be left, right, up, down
 		# for spots of equal value
 		# maybe i should've given those spots a weight value...
 		# uhh, i'll do that "next time" (if i remember)
+		# dang, this could've been pretty useful, actually
+		# since i could just modify some integer instead of having to rewrite and add code
+		# reminder: for anything that could look like it has randomization, but i didn't actually want "random"-ness, use a value weight (or something like that)
+		# i mean, it shouldn't be too hard to rewrite rn
+		# because the move selection is just down there
+		# but i don't actually need to do move weight selection currently
+		
 		if returned_moves.is_empty():
 			print("no available spaces to go to")
 			print("switching to trace_travel_mode 1...")
 			trace_travel_mode = 1
 			print("adding current spot to traceback_path2 array...")
 			traceback_path2.append(tested_position)
+			
+			# i wonder if i should check if the spot could be removed from the traceback_path array in this code
+			# it wouldn't really make sense, since you would have to get stuck in a corner, which requires going onto a new spot
+			# but it would be a nice failsafe for a condition that is pretty much impossible (do i even know what a failsafe is?)
+			# i mean, might as well
+			# (it might make it multiplicatively (or just additively) laggier)
+			# (those are words, right?)
+			if(traceback_path.has(tested_position)):
+				traceback_path.erase(tested_position)
 			continue
 		
 		if loop_iteration_count <= 1:
@@ -753,8 +887,8 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 		if returned_moves.has(Vector2(-1, -1)) and trace_travel_mode == 1:
 			while returned_moves_index < returned_moves.size():
 				if returned_moves[returned_moves_index] == Vector2(-1, -1):
-					# i could lessen this
-					print("index of returned_moves starts at ", returned_moves_index, "meaning the index with the Vector2(-1, -1) marker is at returned_moves_index[", returned_moves_index, "]")
+					# i could lessen this (i assume he meant "shorten the text")
+					print("index of returned_moves starts at ", returned_moves_index, ", meaning the index with the Vector2(-1, -1) marker is at returned_moves_index[", returned_moves_index, "]")
 					break
 				returned_moves_index += 1
 			new_spots_directions = returned_moves.slice(returned_moves_index + 1)
@@ -788,7 +922,7 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 		
 		if !new_spots_directions.is_empty():
 			print("choosing from a New spot (imagine \"new\" was extra wavy and cool)...")
-			print("(not one of the stinky traceback_path spots)")
+			print("(not one of the stinky traceback_path2 spots)")
 			for direction in new_spots_directions:
 				match direction:
 					# i copy-pasted it
@@ -819,21 +953,36 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 			# actually, lemme copy it for no reason first
 			# uhh, not sure if it was nested (it has a very high chance of not being nested), but i'm gonna do .duplicate(true) anyways
 			# more like "not sure if it had nested arrays/(other things passed by reference) in it/as one or more of its values"
-			_traceback_path2_copy.append_array(traceback_path2)
+			# yeah nvm
+			# uhh, im just gonna comment this out for now
+			#_traceback_path2_copy.append_array(traceback_path2)
 			traceback_path2 = []
 		
 		print("moving turtle...")
 		if trace_travel_mode == -1:
+			print("added last spot to the traceback_path array")
 			traceback_path.append(tested_position)
 		elif trace_travel_mode == 1:
 			if traceback_path.has(tested_position):
+				print("removing last spot from traceback_path...")
 				traceback_path.erase(tested_position)
+			# yeah, nvm. (the process of) finding synonyms is too crazy (for me to handle?)
+			print("reclassify the last spot into traceback_path2...")
 			traceback_path2.append(tested_position)
-		tested_position += returned_moves[0]
-		print("turtle's position, probably: ", tested_position)
+		tested_position += returned_moves[0] # wait, why was it an array, again? (looks kind of ugly)
+		print("turtle's position, probably: ", tested_position) # "probably" because the turtle actually hasn't moved yet. it was astral projecting itself along the path to find the way through
 		# totally forgot i had to turn the moves into a sequence
-		return_this_array.append(returned_moves[0])
-	
+		optimize_this_array.append(returned_moves[0])
+	print()
+	if tested_position != end:
+		print("cooked :skull:")
+		# heh, heh
+		# time for some recursion
+		# this will work, right?
+		# this doesn't seem very optimized...
+		return generate_path(grid_copy, max_loop_iterations+10)
+	print("end reached!")
+		
 	
 	
 	# start position is automatically going to be part of the returned array, for optimization reasons
@@ -842,13 +991,21 @@ func generate_path(grid: Array[Array]) -> Array[Vector2]:
 	# we should delete the start coord if the first value (0th index) has it, since we already start on that coord
 	# i should use slice somehow (optionally) (for fun)
 	# turns out i decided to do that in another function
-	return [start] + return_this_array
+	# uh yeah who knows what i was talking about there
+	print()
+	print("getting move sequence...")
+	optimize_this_array.push_front(Vector2(0, 0))
+	print(optimize_this_array)
+	print("(that first move isn't technically part of it)")
+	
+	
+	print()
+	print("optimizing path...")
+	optimize_path(optimize_this_array, start, end)
+	
+	return [] # fix this to do some stuff
 
 
-## short function that just checks for repeated coordinates, and then deletes stuff if it finds repeating coordinates.
-## yeah so far idk how this would actually work
-func optimize_path(move_sequence_path: Array[Vector2]) -> Array[Vector2]:
-	return move_sequence_path
 
 # Called when the script is executed (using File -> Run in Script Editor).
 func _run() -> void:
@@ -856,5 +1013,5 @@ func _run() -> void:
 		print()
 	print("running...")
 	var _turtle_path = []
-	generate_path(grid_of_area)
+	generate_path(grid_of_area, 20)
 	# pass
