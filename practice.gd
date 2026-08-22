@@ -276,9 +276,9 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 	# my code (above) sucked
 	# and i had to use ai (that probably grabbed from someone else) to use this loop thing
 	# (it's kind of obvious that a match statement would be used, but maybe how to use it is a little harder)
-	for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
+	for direction: Vector2 in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
 		## the position calculated by the current direction
-		var target_position = current_position + direction
+		var target_position: Vector2 = current_position + direction
 		print()
 		print("current direction in step 1: ", direction)
 		print("current target position coords: ", target_position)
@@ -425,10 +425,10 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 	## should probably give it a better name
 	var obstacle_targeted_position_checker_variable_comparer: Vector2
 	
-	for direction in direction_passed_steps.duplicate():
+	for direction: Vector2 in direction_passed_steps.duplicate():
 		# might as well just call it obstacle_coord again (wait, again?)
 		obstacle_targeted_position_checker_variable_comparer = current_position + direction
-		for obstacle_coord in obstacles:
+		for obstacle_coord: Vector2 in obstacles:
 			if obstacle_targeted_position_checker_variable_comparer == obstacle_coord:
 				print(direction, " goes onto an obstacle! said obstacle is at ", obstacle_coord)
 				direction_passed_steps.erase(direction)
@@ -441,7 +441,7 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 	print()
 	print("starting step 2.5...")
 	print("seeing if the end is right onto the next move...")	
-	for direction in direction_passed_steps.duplicate():
+	for direction: Vector2 in direction_passed_steps.duplicate():
 		if direction + current_position == end:
 			direction_passed_steps = [direction]
 			print()
@@ -480,10 +480,10 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 			
 			## position coordinate we are trying to go to
 			var target_position: Vector2
-			for direction in direction_passed_steps.duplicate():
+			for direction: Vector2 in direction_passed_steps.duplicate():
 				# this should work, right?
 				target_position = direction + current_position
-				for coord in traceback_path:
+				for coord: Vector2 in traceback_path:
 					# this code should work, right?
 					# i think the second condition is just cuz
 					# it might bug things, though
@@ -536,10 +536,10 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 			var target_position: Vector2
 			
 			# step 1 filtering
-			for direction in direction_passed_steps.duplicate():
+			for direction: Vector2 in direction_passed_steps.duplicate():
 				# this should work, right?
 				target_position = direction + current_position
-				for coord in traceback_path2:
+				for coord: Vector2 in traceback_path2:
 					# this code should work, right?
 					# i think the second condition is just cuz
 					# it might bug things, though
@@ -555,13 +555,13 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 			# don't really need to duplicate it
 			# yeah who cares about "not nesting" when i could just spam the same thing over and over (cries)
 			print()
-			for direction in direction_passed_steps.duplicate():
+			for direction: Vector2 in direction_passed_steps.duplicate():
 				# innocent until proven guilty
 				new_spots_directions.append(direction)
 				# print(new_spots_directions, " is currently being tested, but the previous values are probably good")
 				
 				target_position = direction + current_position
-				for coord in traceback_path:
+				for coord: Vector2 in traceback_path:
 					if target_position == coord:
 						# i should update this message
 						print("sadly, ", direction, " was NOT fit to go onto a new spot (just a minor inconvenience)")
@@ -581,7 +581,7 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 				print("spots available: ", new_spots_directions)
 				
 				# loop through available directions
-				for direction in direction_passed_steps.duplicate():
+				for direction: Vector2 in direction_passed_steps.duplicate():
 					
 					# check whether the direction is NOT inside the new_spots_directions array
 					if !new_spots_directions.has(direction):
@@ -659,11 +659,11 @@ func directions_to_coordinates(move_sequence_path: Array[Vector2], start: Vector
 	# for every iteration of the loop, add the current position through a variable
 	
 	## the position being tracked, so we can do some array stuff
-	var current_position := start
+	var current_position: Vector2 = start
 	
 	# loop
 	# was it really this easy?
-	for direction in move_sequence_path:
+	for direction: Vector2 in move_sequence_path:
 		current_position += direction
 		coords.append(current_position)
 	
@@ -697,7 +697,7 @@ func find_duplicate_value_indices_in_array(array_arg: Array) -> Array[int]:
 	
 	# yeah i like duplicating for no reason
 	## the array we are checking
-	var array_to_check = array_arg.duplicate(true)
+	var array_to_check: Array = array_arg.duplicate(true)
 	
 	## lemme test a custom array rq...
 	## hopefully my testing was good enough (the best)
@@ -705,7 +705,7 @@ func find_duplicate_value_indices_in_array(array_arg: Array) -> Array[int]:
 	
 	# a little bit too similar names...
 	## indices of array that have duplicates
-	var array_duplicate_index: Array = []
+	var array_duplicate_index: Array[int] = []
 	
 	## values of array that have duplicates
 	var array_value_duplicate: Array = []
@@ -726,24 +726,24 @@ func find_duplicate_value_indices_in_array(array_arg: Array) -> Array[int]:
 	# so, i should loop through the "array_duplicate_index" array (wait, maybe it doesn't actually matter)
 	# yeah, i'll just wing it
 	## the first duplicate of the array duplicates, which is the duplicate we are going to use
-	var chosen_duplicate_value = array_value_duplicate[0]
+	var chosen_duplicate_value: Variant = array_value_duplicate[0]
 	
 	## the amount of duplicates this duplicate is duplicated (what)
-	var duplicate_count_amount = array_to_check.count(chosen_duplicate_value)
+	var duplicate_count_amount: int = array_to_check.count(chosen_duplicate_value)
 	
 	## random variable for the loop below.
 	## uhh, for condition purposes.
 	## i don't actually know what this does without looking at the code below for 5 minutes
 	## (i just thought it in my head and it seems to work)
-	var duplicate_checked_counter_for_winging = 0
+	var duplicate_checked_counter_for_winging: int = 0
 	
 	## the index of the duplicate, the last duplicate
 	## it's 0 by default cuz why not (might be buggy by doing that)
-	var last_seen_occurance_duplicate_index = 0
+	var last_seen_occurance_duplicate_index: int = 0
 	
 	# could this loop be combined with the one above?
 	# yeah maybe not
-	for index in array_to_check.size():
+	for index: int in array_to_check.size():
 		if array_to_check[index] == chosen_duplicate_value:
 			duplicate_checked_counter_for_winging += 1
 		if duplicate_checked_counter_for_winging == duplicate_count_amount:
@@ -770,8 +770,8 @@ func find_duplicate_value_indices_in_array(array_arg: Array) -> Array[int]:
 ## i think i had something else to say... (what was it??)
 ## yeah... who knew that this was a thing
 func check_duplicate_in_array(array: Array) -> bool:
-	var dict = {}
-	for value in array:
+	var dict: Dictionary = {}
+	for value: Variant in array:
 		dict[value] = true # why set it to true?
 	return array.size() != dict.size()
 
@@ -793,7 +793,7 @@ func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2) -> Ar
 	print()
 	print("converting moves to coordinates...")
 	## array of coordinates from the moves
-	var coords = directions_to_coordinates(move_sequence_path, start)
+	var coords: Array[Vector2] = directions_to_coordinates(move_sequence_path, start)
 	
 	# check for coordinates that have duplicates
 	# index them
@@ -832,7 +832,7 @@ func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2) -> Ar
 		print("slice, duplicated, excluded last duplicate: ", remove_these_coords)
 		print()
 		# uh, will this delete the right things??
-		for coord in remove_these_coords:
+		for coord: Vector2 in remove_these_coords:
 			print("coord removed: ", coord)
 			coords.erase(coord)
 		print()
@@ -884,7 +884,7 @@ func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2) -> Ar
 	## idk what to call this
 	## checks if the direction was found
 	var random_debugging_variable_worked: bool = false
-	for value in coords:
+	for value: Vector2 in coords:
 		print('"current" position: ', current_position)
 		print("next coord we want to go to: ", value)
 		# for each index (or value, the loop doesn't really care since they have the same number)
@@ -894,7 +894,7 @@ func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2) -> Ar
 		# if the direction matches the coord, we choose it
 		# 0 indexing is kind of confusing me, though, so maybe this is buggy
 		print("checking which direction would work...")
-		for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
+		for direction: Vector2 in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
 			print("trying ", direction, "...")
 			if current_position + direction == value:
 				#print("is this the right one? (delete this print() if it is)")
@@ -938,7 +938,7 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 	## i mean a [variable that was passed by value].
 	## this was added at the same time i added the second parameter/argument...
 	## whoops i had a typo
-	var grid_copy = grid.duplicate(true)
+	var grid_copy: Array[Array] = grid.duplicate(true)
 	
 	
 	## where the turtle starts
@@ -951,14 +951,14 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 	var obstacles: Array[Vector2] = []
 	
 	## the amount of 0 indexed columns in the grid
-	var y_column_count = 0
+	var y_column_count: int = 0
 	## the amount of 0 indexed rows in the grid
-	var x_row_count = 0
+	var x_row_count: int = 0
 	
-	for i in grid_copy.size(): # vertical, y
+	for i: int in grid_copy.size(): # vertical, y
 		if i > y_column_count:
 			y_column_count = i;
-		for j in grid_copy[i].size(): # horizontal, x
+		for j: int in grid_copy[i].size(): # horizontal, x
 			if j > x_row_count:
 				x_row_count = j
 			# 	the current row column value (grid[i][j]) being looped through
@@ -974,8 +974,8 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 			if grid_copy[i][j] == 0:
 				obstacles.append(Vector2(j,i))
 	
-	for value in obstacles:
-		print("obstacle: ", value)
+	for obstacle_coord: Vector2 in obstacles:
+		print("obstacle: ", obstacle_coord)
 	
 	## the technical position we are imagining our turtle in, without actually moving the turtle
 	var tested_position: Vector2 = start
@@ -1016,10 +1016,10 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 	
 	## i don't wanna reopen godot,
 	## so i'm going to make this next loop explode after a set number of iterations
-	var loop_iteration_count = 0
+	var loop_iteration_count: int = 0
 	
 	## variable cuz why not
-	var max_loop_iterations = max_loop_iterations_argument
+	var max_loop_iterations: int = max_loop_iterations_argument
 	
 	# probably put some loop code here
 	# that runs the one function above
@@ -1110,7 +1110,7 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 		
 		
 		elif returned_moves.size() > 1:
-			for direction in returned_moves:
+			for direction: Vector2 in returned_moves:
 				match direction:
 					Vector2.LEFT:
 						returned_moves = [Vector2.LEFT]
@@ -1136,7 +1136,7 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 		if !new_spots_directions.is_empty():
 			print("choosing from a New spot (imagine \"new\" was extra wavy and cool)...")
 			print("(not one of the stinky traceback_path2 spots)")
-			for direction in new_spots_directions:
+			for direction: Vector2 in new_spots_directions:
 				match direction:
 					# i copy-pasted it
 					Vector2.LEFT:
@@ -1230,11 +1230,10 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 
 # Called when the script is executed (using File -> Run in Script Editor).
 func _run() -> void:
-	for i in 50:
+	for i: int in 50:
 		print()
 	print("running...")
-	var _turtle_path = []
-	generate_path(grid_of_area, 20)
+	var _turtle_path: Array[Vector2] = generate_path(grid_of_area, 20)
 	
 	# placeholder:
 	#check_for_duplicate_values_in_array_indices(_turtle_path)
