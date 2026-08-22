@@ -799,6 +799,7 @@ func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2) -> Ar
 	print("converting moves to coordinates...")
 	## array of coordinates from the moves
 	var coords: Array[Vector2] = directions_to_coordinates(move_sequence_path, start)
+	print(coords)
 	
 	# check for coordinates that have duplicates
 	# index them
@@ -1183,7 +1184,8 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 			# yeah nvm
 			# uhh, im just gonna comment this out for now
 			#_traceback_path2_copy.append_array(traceback_path2)
-			traceback_path2 = []
+			# update: seems i will have to try something else
+			#traceback_path2 = []
 		
 		print("moving turtle...")
 		if trace_travel_mode == -1:
@@ -1202,7 +1204,8 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 		# totally forgot i had to turn the moves into a sequence
 		optimize_this_array.append(returned_moves[0])
 	print()
-	if max_loop_iterations > 50:
+	#if max_loop_iterations > 50:
+	if loop_iteration_count >= max_loop_iterations:
 		# is this even possible?
 		return [Vector2(-1, -1)]
 	if tested_position != end:
@@ -1255,7 +1258,7 @@ func _run() -> void:
 		print()
 	print("running...")
 	
-	var _turtle_path: Array[Vector2] = generate_path(grid_of_area, 50)
+	var _turtle_path: Array[Vector2] = generate_path(grid_of_area, 75)
 	# i should make some visuals for this
 	# just like grids of letters and numbers separated by print() that you have to scroll through
 	# to see the process of the "turtle" moving
