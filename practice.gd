@@ -8,12 +8,15 @@ extends EditorScript
 ## should i make the "1"s actually usuable?
 ## right now, they could just be any number (that isn't 0, 2, or 3)
 ## try with other grids, so i know my code actually works
-## left right up down (the order of getting stuck in corners)
+## left right up down (the order of getting stuck in corners for this grid, i think)
+## uhh, has to be shaped like multidimensional array
+## not jagged/staggered array, since those ones would mess with my index
 var grid_of_area: Array[Array] = [
-	[1, 1, 2, 1, 1, 1],
-	[0, 0, 0, 0, 0, 1],
-	[3, 1, 1, 1, 0, 1],
-	[1, 0, 0, 1, 1, 1],
+	[1, 1, 0, 1, 1, 1],
+	[0, 1, 0, 1, 0, 1],
+	[1, 1, 1, 2, 1, 1],
+	[0, 1, 0, 1, 0, 1],
+	[1, 3, 1, 1, 1, 1],
 ]
 # i updated the map
 # so anything referring to the map before will now be somewhat outdated
@@ -571,7 +574,7 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 						# this should work, right????
 						break
 				print("new spots: ", new_spots_directions, " after analyzing what available spots aren't on the traceback_path coords")
-			
+			print("that really spams new spots when there's multiple")
 			
 			# step 3 do some more stuff depending on whether there are new spots available
 			
@@ -944,6 +947,8 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 	
 	
 	## where the turtle starts
+	## yeah this'd just be cooked if the grid didn't have 2 or 3
+	## also cooked if there's more than 1
 	var start: Vector2 = Vector2(0,0)
 	
 	## uhh, where the turtle stops moving?
@@ -1066,6 +1071,13 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 		# i mean, it shouldn't be too hard to rewrite rn
 		# because the move selection is just down there
 		# but i don't actually need to do move weight selection currently
+		# wow, it'd be really nice if i did move weight
+		# to choose the move order
+		# important idea:
+		# because then i would be able to run the function multiple times with different move weights
+		# which would then compare the final move sequences and then choose the shortest path
+		# yeah something like that
+		# close enough
 		
 		if returned_moves.is_empty():
 			print("no available spaces to go to")
@@ -1199,7 +1211,14 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 		# time for some recursion
 		# this will work, right?
 		# this doesn't seem very optimized...
-		return generate_path(grid_copy, max_loop_iterations+10)
+		# this might actually be cooked
+		# idk why i didn't just set the max_loop_iterations to 50
+		# and not do this recursion stuff
+		# completely unnecessary
+		# yeah nvm
+		# recursion crashed me (or i was just too lazy to wait)
+		# maybe i just didn't implement it correctly
+		#return generate_path(grid_copy, max_loop_iterations+10)
 	print("end reached!")
 		
 	
@@ -1224,7 +1243,7 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 	some_array_var_that_receives_optimized_array = optimize_path(optimize_this_array, start)
 	
 	print()
-	print("optimization finished! (probably)") # remove probably after i'm sure it worked
+	print("optimization finished!")
 	print(some_array_var_that_receives_optimized_array)
 	return some_array_var_that_receives_optimized_array
 
@@ -1235,7 +1254,13 @@ func _run() -> void:
 	for i: int in 50:
 		print()
 	print("running...")
-	var _turtle_path: Array[Vector2] = generate_path(grid_of_area, 20)
+	
+	var _turtle_path: Array[Vector2] = generate_path(grid_of_area, 50)
+	# i should make some visuals for this
+	# just like grids of letters and numbers separated by print() that you have to scroll through
+	# to see the process of the "turtle" moving
+	# close enough
+	# uhh, i'll do that later
 	
 	# placeholder:
 	#check_for_duplicate_values_in_array_indices(_turtle_path)
