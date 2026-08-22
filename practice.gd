@@ -176,6 +176,8 @@ var grid_of_area: Array[Array] = [
 # when we compute the final path array with vector2 coords telling where to go, we should loop through the array, checking for later coords that match previous ones
 # if we find one like that, then we should just delete all the coords from here to there (inclusive)
 
+# use const more (i never used it for some reason)
+
 # hmmm, i wonder if i could add some thing that checks for obstacles...
 # oh, wait, i can!
 # i should add another parameter to the generate path array thing
@@ -561,6 +563,7 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 				target_position = direction + current_position
 				for coord in traceback_path:
 					if target_position == coord:
+						# i should update this message
 						print("sadly, ", direction, " was NOT fit to go onto a new spot (just a minor inconvenience)")
 						new_spots_directions.erase(direction)
 						# this should work, right????
@@ -776,10 +779,12 @@ func check_duplicate_in_array(array: Array) -> bool:
 
 ## short function that just checks for repeated coordinates, and then deletes stuff if it finds repeating coordinates.
 ## yeah so far idk how this would actually work
-func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2, _end: Vector2) -> Array[Vector2]:
+func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2) -> Array[Vector2]:
 	
 	## mutating too scary
-	var move_sequence_path = move_sequence_path_arg.duplicate(true)
+	## is being reused
+	## imagine not putting typed and bugging the whole return :skull: :skull:
+	var move_sequence_path: Array[Vector2] = move_sequence_path_arg.duplicate()
 	
 	# yeah idk how to do this
 	# steps:
@@ -824,7 +829,7 @@ func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2, _end:
 		print()
 		print("debugging:")
 		print("coords: ", coords)
-		print("slice, duplicated, excluded last duplicate(?): ", remove_these_coords)
+		print("slice, duplicated, excluded last duplicate: ", remove_these_coords)
 		print()
 		# uh, will this delete the right things??
 		for coord in remove_these_coords:
@@ -851,10 +856,67 @@ func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2, _end:
 		print("actual coords: ", coords)
 	
 	# uhh, somehow convert the coords back into moves? (this might be a little harder) (wait nvm) (should just spam loops and if statements)
+	# maybe this should've been a function, too
 	# requires start position
+	# start at start position
+	# loop through the coords
+	# see which vector2.direction brings us to the next coord
+	# might have to use index for loop
+	## starting position
+	## idk what this actually does
+	## imma wing it
+	var current_position: Vector2 = start
+	# since we removed the start from coords, the coordinates/values in the coords array are the places AFTER doing a move
+	# so we can just start at start
+	print()
+	print("recalculating or something...")
+	print("(yeah i have no idea what this does)")
 	
+	## array that holds the moves
+	## yeah nvm i'm just gonna reuse the variable
+	move_sequence_path = []
 	
-	return move_sequence_path # update this
+	# was it really this easy? (print statement bloat, however)
+	
+	print()
+	# goes through the coords array
+	# idk why i wanted to use index before
+	## idk what to call this
+	## checks if the direction was found
+	var random_debugging_variable_worked: bool = false
+	for value in coords:
+		print('"current" position: ', current_position)
+		print("next coord we want to go to: ", value)
+		# for each index (or value, the loop doesn't really care since they have the same number)
+		# yeah nvm we doing value
+		# uhh yeah
+		# for each coord in the coords array, we check some direction
+		# if the direction matches the coord, we choose it
+		# 0 indexing is kind of confusing me, though, so maybe this is buggy
+		print("checking which direction would work...")
+		for direction in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
+			print("trying ", direction, "...")
+			if current_position + direction == value:
+				#print("is this the right one? (delete this print() if it is)")
+				move_sequence_path.append(direction) 
+				current_position += direction
+				print("chosen direction: ", direction)
+				print('"moving"...')
+				print()
+				random_debugging_variable_worked = true
+				break # breaking cuz why not?
+			print("...")
+		if !random_debugging_variable_worked:
+			print("erm what the heck")
+			print("absolutely cooked") # i don't think this ran, so that's good
+		random_debugging_variable_worked = false
+		print()
+	# i think that works
+	
+	print(move_sequence_path) # these both print
+	#var some_random_variable_that_hopefully_works = move_sequence_path.duplicate()
+	#print(some_random_variable_that_hopefully_works)
+	return move_sequence_path
 
 
 
@@ -1118,10 +1180,11 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 				print("removing last spot from traceback_path...")
 				traceback_path.erase(tested_position)
 			# yeah, nvm. (the process of) finding synonyms is too crazy (for me to handle?)
-			print("reclassify the last spot into traceback_path2...")
+			print("reclassifying the last spot into traceback_path2...")
 			traceback_path2.append(tested_position)
 		tested_position += returned_moves[0] # wait, why was it an array, again? (looks kind of ugly)
-		print("turtle's position, probably: ", tested_position) # "probably" because the turtle actually hasn't moved yet. it was astral projecting itself along the path to find the way through
+		print("turtle's position: ", tested_position) # "probably" because the turtle actually hasn't moved yet. it was astral projecting itself along the path to find the way through
+		# yeah nvm i'm removing probably
 		# totally forgot i had to turn the moves into a sequence
 		optimize_this_array.append(returned_moves[0])
 	print()
@@ -1155,12 +1218,13 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 	
 	print()
 	print("optimizing path...")
-	var some_array_var_that_receives_optimized_array: Array[Vector2] = optimize_path(optimize_this_array, start, end)
+	var some_array_var_that_receives_optimized_array: Array[Vector2] = []
+	some_array_var_that_receives_optimized_array = optimize_path(optimize_this_array, start)
 	
 	print()
 	print("optimization finished! (probably)") # remove probably after i'm sure it worked
 	print(some_array_var_that_receives_optimized_array)
-	return some_array_var_that_receives_optimized_array # fix this to do some stuff
+	return some_array_var_that_receives_optimized_array
 
 
 
@@ -1172,7 +1236,5 @@ func _run() -> void:
 	var _turtle_path = []
 	generate_path(grid_of_area, 20)
 	
-	
 	# placeholder:
 	#check_for_duplicate_values_in_array_indices(_turtle_path)
-	# pass
