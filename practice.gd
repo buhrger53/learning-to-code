@@ -7,6 +7,8 @@ extends EditorScript
 ## random grid that we should try to pathfind through.
 ## should i make the "1"s actually usuable?
 ## right now, they could just be any number (that isn't 0, 2, or 3)
+## try with other grids, so i know my code actually works
+## left right up down (the order of getting stuck in corners)
 var grid_of_area: Array[Array] = [
 	[1, 1, 2, 1, 1, 1],
 	[0, 0, 0, 0, 0, 1],
