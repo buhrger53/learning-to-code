@@ -12,7 +12,7 @@ extends EditorScript
 ## uhh, has to be shaped like multidimensional array
 ## not jagged/staggered array, since those ones would mess with my index
 var grid_of_area: Array[Array] = [
-	[1, 1, 0, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1],
 	[0, 1, 0, 1, 0, 1],
 	[1, 1, 1, 2, 1, 1],
 	[0, 1, 0, 1, 0, 1],
@@ -936,7 +936,7 @@ func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2) -> Ar
 
 
 ## function for creating the path the turtle will take
-func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Array[Vector2]:
+func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_weight_ver: int) -> Array[Vector2]:
 	# dang, this function really just does take the grid as its only argument
 	# guess not anymore
 	
@@ -1185,7 +1185,7 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 			# uhh, im just gonna comment this out for now
 			#_traceback_path2_copy.append_array(traceback_path2)
 			# update: seems i will have to try something else
-			#traceback_path2 = []
+			traceback_path2 = []
 		
 		print("moving turtle...")
 		if trace_travel_mode == -1:
