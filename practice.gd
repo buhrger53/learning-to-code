@@ -676,7 +676,9 @@ func directions_to_coordinates(move_sequence_path: Array[Vector2], start: Vector
 ## time for more functions! (i had to add some sort of punctuation) (yeah, that's not really the right tone).
 ## this function will check for duplicates in an array,
 ## and then return the indices of the array at which doubles were found
-func check_for_duplicate_values_in_array(array_to_check: Array):
+## might have to run this multiple times, since of the way it works
+## it turns out indices might be integers
+func find_duplicate_value_indices_in_array(array_arg: Array) -> Array[int]:
 	# how this might work??
 	# loop through the array (probably using while loop that acts like my usual for loop)
 	# use .count()
@@ -687,37 +689,171 @@ func check_for_duplicate_values_in_array(array_to_check: Array):
 	# and have too many variables
 	# well, i guess the value with the lowest index should be prioritized first
 	# any "counted" duplicates between the 2 indices of the first value with duplicates should be removed
+	# uh, did i even do that?
+	# im def gonna delete it somewhere else, unless that's too tedious
 	
-	pass
+	# yeah i like duplicating for no reason
+	## the array we are checking
+	var array_to_check = array_arg.duplicate(true)
+	
+	## lemme test a custom array rq...
+	## hopefully my testing was good enough (the best)
+	#var array_to_check: Array = [1, 3 , 5, 7, 9 ,1 ,2 ,4 ,8 ,5, 10, 1, 5, 7, 9, 12, 46, 22]
+	
+	# a little bit too similar names...
+	## indices of array that have duplicates
+	var array_duplicate_index: Array = []
+	
+	## values of array that have duplicates
+	var array_value_duplicate: Array = []
+	
+	## index
+	var loop_index: int = 0
+	while loop_index < array_to_check.size():
+		if array_to_check.count(array_to_check[loop_index]) > 1:
+			array_duplicate_index.append(loop_index)
+			array_value_duplicate.append(array_to_check[loop_index])
+		
+		loop_index += 1
+	print()
+	print("duplicates in array: ", array_value_duplicate)
+	print("indices, probably lined up: ", array_duplicate_index)
+	
+	# hmmm, how should the logic work...?
+	# so, i should loop through the "array_duplicate_index" array (wait, maybe it doesn't actually matter)
+	# yeah, i'll just wing it
+	## the first duplicate of the array duplicates, which is the duplicate we are going to use
+	var chosen_duplicate_value = array_value_duplicate[0]
+	
+	## the amount of duplicates this duplicate is duplicated (what)
+	var duplicate_count_amount = array_to_check.count(chosen_duplicate_value)
+	
+	## random variable for the loop below.
+	## uhh, for condition purposes.
+	## i don't actually know what this does without looking at the code below for 5 minutes
+	## (i just thought it in my head and it seems to work)
+	var duplicate_checked_counter_for_winging = 0
+	
+	## the index of the duplicate, the last duplicate
+	## it's 0 by default cuz why not (might be buggy by doing that)
+	var last_seen_occurance_duplicate_index = 0
+	
+	# could this loop be combined with the one above?
+	# yeah maybe not
+	for index in array_to_check.size():
+		if array_to_check[index] == chosen_duplicate_value:
+			duplicate_checked_counter_for_winging += 1
+		if duplicate_checked_counter_for_winging == duplicate_count_amount:
+			last_seen_occurance_duplicate_index = index
+			break
+	
+	var returned_stuff: Array[int] = [array_duplicate_index[0], last_seen_occurance_duplicate_index]
+	print("indices of duplicates: ", returned_stuff)
+	#print(array_to_check[returned_stuff[0]])
+	#print(array_to_check[returned_stuff[1]])
+	
+	## maybe i should make this thing recursion run, heh
+	## so it could just delete the stuff itself...
+	## maybe...
+	## also being able to mutate the array_arg instead of just like not doing that
+	return returned_stuff
+	
 
 
 
-
-
-
-
-
+## i stole this from google ai
+## i'm gonna paraphrase it though
+## supposedly, it was just making some dictionary that was like the array
+## i think i had something else to say... (what was it??)
+## yeah... who knew that this was a thing
+func check_duplicate_in_array(array: Array) -> bool:
+	var dict = {}
+	for value in array:
+		dict[value] = true # why set it to true?
+	return array.size() != dict.size()
 
 
 
 ## short function that just checks for repeated coordinates, and then deletes stuff if it finds repeating coordinates.
 ## yeah so far idk how this would actually work
-func optimize_path(move_sequence_path: Array[Vector2], start: Vector2, end: Vector2) -> Array[Vector2]:
+func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2, _end: Vector2) -> Array[Vector2]:
+	
+	## mutating too scary
+	var move_sequence_path = move_sequence_path_arg.duplicate(true)
+	
 	# yeah idk how to do this
 	# steps:
 	# read the move_sequence_path array
 	# convert to coordinates (into a new array)
+	print()
+	print("converting moves to coordinates...")
+	## array of coordinates from the moves
 	var coords = directions_to_coordinates(move_sequence_path, start)
-	
 	
 	# check for coordinates that have duplicates
 	# index them
 	# using magical code (that has backwards functionality, maybe like getting some values to do a "reverse" .slice()),
 	# delete the extra coords
 	# if the first coord in the converted coordinate array is the start coord, undo it
-	# uhh, somehow convert the coords back into moves?
 	# wait, nvm, i can just delete the same amount of values from the move_sequence_path array, since they should have the same ones
 	# i guess do that thing with the first move being "Vector2(0, 0)" in the move_sequence_path array having to be deleted
+	# nvm we deleting coords
+	# uhh, so if the first move is `start` then we delete it (wonder if i should use backticks more for code blocks) (yeah i should put this comment after the dupe deletion)
+	print()
+	print("checking for duplicates...")
+	while check_duplicate_in_array(coords):
+		
+		print()
+		print("duplicate available!") # this sounds cringe every time i use an exclamation mark
+		
+		## indices of some dupes (2, the first and last) in the coords array.
+		## well, it should be 2 indices (2 values in the array)
+		var dupes_indices: Array[int] = find_duplicate_value_indices_in_array(coords)
+		
+		
+		# might be buggy?
+		# maybe i could just do some reverse slice or something
+		# sounds too hard (much work) to code though (too much logic)
+		# some loop that does things
+		# erases values that match
+		# should work, right?
+		# hopefully .slice() works
+		
+		## sliced slice of the coords array, between the duplicated stuff
+		var remove_these_coords: Array[Vector2] = coords.slice(dupes_indices[0], dupes_indices[1])
+		print()
+		print("debugging:")
+		print("coords: ", coords)
+		print("slice, duplicated, excluded last duplicate(?): ", remove_these_coords)
+		print()
+		# uh, will this delete the right things??
+		for coord in remove_these_coords:
+			print("coord removed: ", coord)
+			coords.erase(coord)
+		print()
+		print("coords now: ", coords)
+	# it seems that's working properly
+	# imo, i could've just let find_duplicate...(yap) function mutate the coords array
+	# or i could just put that into another function
+	# but that'd be too much work
+	# and i don't really need all the functions
+	
+	# remove start from the coords array, since we don't need it anymore (i hope)
+	# wonder if i should do coords[0] or coords.has()
+	# hmmm... (i guess .has() is basically already going to be checked for while coords[0], but is it even possible to go back onto the start square when i optimized?)
+	# well, i could do .has() if something bugs, somehow
+	if coords[0] == start:
+		# coords.erase(start)
+		# or should i do coords.remove_at(0)?
+		# well, .erase() should check the 0th index first, right?
+		# supposedly, for 1 extra millisecond saved, i should do the latter
+		coords.remove_at(0)
+		print("actual coords: ", coords)
+	
+	# uhh, somehow convert the coords back into moves? (this might be a little harder) (wait nvm) (should just spam loops and if statements)
+	# requires start position
+	
+	
 	return move_sequence_path # update this
 
 
@@ -989,6 +1125,9 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 		# totally forgot i had to turn the moves into a sequence
 		optimize_this_array.append(returned_moves[0])
 	print()
+	if max_loop_iterations > 50:
+		# is this even possible?
+		return [Vector2(-1, -1)]
 	if tested_position != end:
 		print("cooked :skull:")
 		# heh, heh
@@ -1016,9 +1155,12 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int) -> Arr
 	
 	print()
 	print("optimizing path...")
-	optimize_path(optimize_this_array, start, end)
+	var some_array_var_that_receives_optimized_array: Array[Vector2] = optimize_path(optimize_this_array, start, end)
 	
-	return [] # fix this to do some stuff
+	print()
+	print("optimization finished! (probably)") # remove probably after i'm sure it worked
+	print(some_array_var_that_receives_optimized_array)
+	return some_array_var_that_receives_optimized_array # fix this to do some stuff
 
 
 
@@ -1029,4 +1171,8 @@ func _run() -> void:
 	print("running...")
 	var _turtle_path = []
 	generate_path(grid_of_area, 20)
+	
+	
+	# placeholder:
+	#check_for_duplicate_values_in_array_indices(_turtle_path)
 	# pass
