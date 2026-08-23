@@ -12,9 +12,9 @@ extends EditorScript
 ## uhh, has to be shaped like multidimensional array
 ## not jagged/staggered array, since those ones would mess with my index
 var grid_of_area: Array[Array] = [
-	[1, 1, 1, 1, 1, 1],
-	[0, 1, 0, 1, 0, 1],
-	[1, 1, 1, 2, 1, 1],
+	[1, 1, 0, 1, 1, 1],
+	[0, 0, 0, 0, 0, 1],
+	[0, 1, 1, 2, 0, 1],
 	[0, 1, 0, 1, 0, 1],
 	[1, 3, 1, 1, 1, 1],
 ]
@@ -472,7 +472,7 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 	print("checking for traceback_path logic...")
 	print()
 	
-	
+	# i think this could've just been an if/else statement
 	match trace_travel_mode:
 		# don't go along the traceback_path array
 		# wonder if this code should also be affected (in some way) by the traceback_path2 array
@@ -928,6 +928,143 @@ func optimize_path(move_sequence_path_arg: Array[Vector2], start: Vector2) -> Ar
 
 
 
+## what am i doing
+func letters_to_directions(letters: String) -> Array[Vector2]:
+	## directions
+	var dirs: Array[Vector2] = []
+	
+	
+	# this works, right?
+	for letter in letters:
+		match letter:
+			"a":
+				dirs.append(Vector2.LEFT)
+			"b":
+				dirs.append(Vector2.RIGHT)
+			"c":
+				dirs.append(Vector2.UP)
+			"d":
+				dirs.append(Vector2.DOWN)
+	return dirs
+
+## for the move weight thing.
+## uh, i think this should, like, grab some move weight version,
+## and then return some directions based on the string from the moves
+## something like that?
+func check_move_weight_and_assign_corresponding_direction_move_weight(move_weight_ver: int) -> Array[Vector2]:
+	# abcd, bacd, abdc, badc, cdab, dcab, cdba, dcba
+	# acbd, acdb, adcb, adbc, bdac, bdca, bcda, bcad, cabd, cadb, cbad, cbda, dabc, dacb, dbca, dbac
+	match move_weight_ver:
+		0:
+			return(letters_to_directions("abcd"))
+		1:
+			return(letters_to_directions("bacd"))
+		2:
+			return(letters_to_directions("abdc"))
+		3:
+			return(letters_to_directions("badc"))
+		4:
+			return(letters_to_directions("cdab"))
+		5:
+			return(letters_to_directions("dcab"))
+		6:
+			return(letters_to_directions("cdba"))
+		7:
+			return(letters_to_directions("dcba"))
+		8:
+			return(letters_to_directions("acbd"))
+		9:
+			return(letters_to_directions("acdb"))
+		10:
+			return(letters_to_directions("adcb"))
+		11:
+			return(letters_to_directions("adbc"))
+		12:
+			return(letters_to_directions("bdac"))
+		13:
+			return(letters_to_directions("bdca"))
+		14:
+			return(letters_to_directions("bcda"))
+		15:
+			return(letters_to_directions("bcad"))
+		16:
+			return(letters_to_directions("cabd"))
+		17:
+			return(letters_to_directions("cadb"))
+		18:
+			return(letters_to_directions("cbad"))
+		19:
+			return(letters_to_directions("cbda"))
+		20:
+			return(letters_to_directions("dabc"))
+		21:
+			return(letters_to_directions("dacb"))
+		22:
+			return(letters_to_directions("dbca"))
+		23:
+			return(letters_to_directions("dbac"))
+	return []
+
+
+
+## set returned_moves to this function
+func direction_chooser(array_with_directions: Array[Vector2], which_direction_arg: Array[Vector2]) -> Array[Vector2]:
+	# would this count as spam?
+	# maybe i could shorten it (i was going to put like 4 match statements and for loops inside of 1 match statement)
+	# uhh nvm, turns out it was going to be like 24 match statements and 24 for loops
+	# crazy
+	# until i made this variable
+	
+	## makes it easier.
+	## uh, stores which order the directions go in.
+	## there should be 24 configurations of move_weight.
+	## sadly.
+	## wait, why?
+	## yo that's crazy.
+	## i should quickly organize the options that matter more
+	var which_direction: Array[Vector2] = which_direction_arg
+	## left, right, up, down
+	## right, left, up, down,
+	## left, right, down, up
+	## right, left, down, up
+	## up, down, left, right
+	## down, up, left, right
+	## up, down, right, left
+	## down, up, right, left
+	## the rest because i don't care about mixing the other ones
+	# abcd, bacd, abdc, badc, cdab, dcab, cdba, dcba
+	# acbd, acdb, adcb, adbc, acbd, acdb, adcb, adbc, cabd, cadb, cbad, cbda, dabc, dacb, dbca, dbac
+	# the rest: 
+	# left = a
+	# right = b
+	# up = c
+	# down = d
+	# abcd, bacd, abdc, acbd, 
+	# bcda, acdb, bdca, cbda, 
+	# cdab, cdba, dcab, bdac, 
+	# dabc, dbac, cabd, dacb, 
+	# mb guys
+	# i didn't learn about trees
+	# and factorials
+	# uhh, turns out there was 24 (edit)
+	# a: #abcd, #abdc, acbd, acdb, adcb, adbc
+	# b: #bacd, #badc, bdac, bdca, bcda, bcad
+	# c: cabd, cadb, cbad, cbda, #cdab, #cdba
+	# d: dabc, dacb, #dcab, #dcba, dbca, dbac
+	
+	
+	# what the dookie optimization
+	# i should've seen this myself (instead of only loving match statements and for loops)
+	# i guess i gotta check for inbuilt functions
+	# and occasionally convert back to pseudocode
+	# uh, i don't wanna fix the other stuff right now
+	for direction in which_direction:
+		if array_with_directions.has(direction):
+			print(direction, " chosen to move")
+			return [direction]
+	print("this shouldn't be possible?!!")
+	print("bro's code is bugged (again)")
+	return [Vector2(-1, -1)]
 
 
 
@@ -1036,7 +1173,7 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_w
 	var returned_moves: Array[Vector2] = []
 	
 	## index for counting the one thing with Vector2(-1, -1)
-	var returned_moves_index: int = 0
+	#var returned_moves_index: int = 0
 	
 	## new spots directions, but transported over here
 	var new_spots_directions: Array[Vector2] = []
@@ -1046,6 +1183,11 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_w
 	
 	## array that holds the sequence of moves
 	var optimize_this_array: Array[Vector2] = []
+	
+	## magic
+	## some thing that tells which direction should be chosen
+	## yeah idk what my code does anymore
+	var which_direction: Array[Vector2] = check_move_weight_and_assign_corresponding_direction_move_weight(move_weight_ver)
 	
 	while (tested_position != end) and (loop_iteration_count < max_loop_iterations):
 		loop_iteration_count += 1 # yeah im just gonna put it at the top
@@ -1112,68 +1254,30 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_w
 		
 		# second condition is pretty optional
 		# since the returned_moves array is only going to have "Vector2(-1, -1)" while we're in mode 1
+		# array.find() :skull:
+		# what is this guy doing
+		# might bug fr
 		if returned_moves.has(Vector2(-1, -1)) and trace_travel_mode == 1:
-			while returned_moves_index < returned_moves.size():
-				if returned_moves[returned_moves_index] == Vector2(-1, -1):
-					# i could lessen this (i assume he meant "shorten the text")
-					print("index of returned_moves starts at ", returned_moves_index, ", meaning the index with the Vector2(-1, -1) marker is at returned_moves_index[", returned_moves_index, "]")
-					break
-				returned_moves_index += 1
-			new_spots_directions = returned_moves.slice(returned_moves_index + 1)
+			# var slice_magic_doo_doo = returned_moves.find(Vector2(-1, -1)) + 1
+			#while returned_moves_index < returned_moves.size():
+				#if returned_moves[returned_moves_index] == Vector2(-1, -1):
+					## i could lessen this (i assume he meant "shorten the text")
+					#print("index of returned_moves starts at ", returned_moves_index, ", meaning the index with the Vector2(-1, -1) marker is at returned_moves_index[", returned_moves_index, "]")
+					#break
+				#returned_moves_index += 1
+			new_spots_directions = returned_moves.slice(returned_moves.find(Vector2(-1, -1)) + 1)
 			print("new spots: ", new_spots_directions)
 			print()
 		
 		
 		elif returned_moves.size() > 1:
-			for direction: Vector2 in returned_moves:
-				match direction:
-					Vector2.LEFT:
-						returned_moves = [Vector2.LEFT]
-						print("left chosen to move!")
-						break
-					Vector2.RIGHT:
-						returned_moves = [Vector2.RIGHT]
-						print("right chosen to move!")
-						break
-					Vector2.UP:
-						returned_moves = [Vector2.UP]
-						print("up chosen to move!")
-						break
-					Vector2.DOWN:
-						returned_moves = [Vector2.DOWN]
-						print("down chosen to move!")
-						break
-					_:
-						print("this shouldn't be possible?!!")
-						print("bro's code is bugged (again)")
-						break
+			returned_moves = direction_chooser(returned_moves, which_direction)
 		
 		if !new_spots_directions.is_empty():
 			print("choosing from a New spot (imagine \"new\" was extra wavy and cool)...")
 			print("(not one of the stinky traceback_path2 spots)")
-			for direction: Vector2 in new_spots_directions:
-				match direction:
-					# i copy-pasted it
-					Vector2.LEFT:
-						returned_moves = [Vector2.LEFT]
-						print("left chosen to move!")
-						break
-					Vector2.RIGHT:
-						returned_moves = [Vector2.RIGHT]
-						print("right chosen to move!")
-						break
-					Vector2.UP:
-						returned_moves = [Vector2.UP]
-						print("up chosen to move!")
-						break
-					Vector2.DOWN:
-						returned_moves = [Vector2.DOWN]
-						print("down chosen to move!")
-						break
-					_:
-						print("this shouldn't be possible?!!")
-						print("bro's code is bugged (again)")
-						break
+			# might bug fr
+			returned_moves = direction_chooser(new_spots_directions, which_direction)
 			print("resetting trace_travel_mode back to -1...")
 			trace_travel_mode = -1
 			# imo, i should just gonna reset the traceback_path2 array
@@ -1185,6 +1289,7 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_w
 			# uhh, im just gonna comment this out for now
 			#_traceback_path2_copy.append_array(traceback_path2)
 			# update: seems i will have to try something else
+			# yeah idk anymore
 			traceback_path2 = []
 		
 		print("moving turtle...")
@@ -1251,6 +1356,24 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_w
 	return some_array_var_that_receives_optimized_array
 
 
+## also returns moves
+## the day "generate_path" stopped being the "main" function
+func compare_paths_move_weight(grid: Array[Array], lower_function_loop_iterations: int, move_weight_amount_checked: int) -> Array[Vector2]:
+	var move_weight_ver: int = 0
+	var dict: Dictionary = {}
+	
+	# what am i typing
+	for x in move_weight_amount_checked:
+		dict[x] = generate_path(grid, lower_function_loop_iterations, move_weight_ver)
+	var least_array = dict[0]
+	for key in dict:
+		if dict[key].size() < least_array.size():
+			least_array = dict[key]
+	
+	return least_array
+
+
+
 
 # Called when the script is executed (using File -> Run in Script Editor).
 func _run() -> void:
@@ -1258,7 +1381,8 @@ func _run() -> void:
 		print()
 	print("running...")
 	
-	var _turtle_path: Array[Vector2] = generate_path(grid_of_area, 75)
+	var turtle_path: Array[Vector2] = generate_path(grid_of_area, 75, 0) # compare_paths_move_weight(grid_of_area, 75, 4)
+	print(turtle_path)
 	# i should make some visuals for this
 	# just like grids of letters and numbers separated by print() that you have to scroll through
 	# to see the process of the "turtle" moving
@@ -1267,3 +1391,4 @@ func _run() -> void:
 	
 	# placeholder:
 	#check_for_duplicate_values_in_array_indices(_turtle_path)
+	
