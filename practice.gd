@@ -5,19 +5,27 @@ extends EditorScript
 # maybe try some stuff with flattened 1d arrays?
 # yeah the turtle is kind of fictional
 ## random grid that we should try to pathfind through.
-## should i make the "1"s actually usuable?
+## should i make the "1"s actually usuable? (maybe someday i could make traceback_path be related to the numbers on the grid)
 ## right now, they could just be any number (that isn't 0, 2, or 3)
 ## try with other grids, so i know my code actually works
 ## left right up down (the order of getting stuck in corners for this grid, i think)
 ## uhh, has to be shaped like multidimensional array
 ## not jagged/staggered array, since those ones would mess with my index
 var grid_of_area: Array[Array] = [
-	[1, 1, 0, 1, 1, 1],
-	[0, 0, 0, 0, 0, 1],
-	[0, 1, 1, 2, 0, 1],
+	[1, 1, 1, 1, 1, 1],
+	[0, 1, 0, 0, 0, 1],
+	[1, 1, 1, 2, 0, 1],
 	[0, 1, 0, 1, 0, 1],
 	[1, 3, 1, 1, 1, 1],
 ]
+
+# instead of some random move weight, i think i should make something that "somehow" calculates which move weight might be best
+# yeah idk how to code that though
+# could def improve it if somehow i uh yeah yk?
+
+
+
+
 # i updated the map
 # so anything referring to the map before will now be somewhat outdated
 # i guess the concepts will be the same
@@ -441,6 +449,10 @@ func check_available_spaces_to_move_to(current_position: Vector2, obstacles: Arr
 	# wowwww
 	# so much more simpler
 	# i think this works
+	# edit: i could've used .has() somehow in this
+	# i guess it's alright
+	# uhh, too much work to update code
+	print("remaining directions: ", direction_passed_steps)
 	
 	
 	print()
@@ -935,7 +947,7 @@ func letters_to_directions(letters: String) -> Array[Vector2]:
 	
 	
 	# this works, right?
-	for letter in letters:
+	for letter: String in letters:
 		match letter:
 			"a":
 				dirs.append(Vector2.LEFT)
@@ -953,7 +965,8 @@ func letters_to_directions(letters: String) -> Array[Vector2]:
 ## something like that?
 func check_move_weight_and_assign_corresponding_direction_move_weight(move_weight_ver: int) -> Array[Vector2]:
 	# abcd, bacd, abdc, badc, cdab, dcab, cdba, dcba
-	# acbd, acdb, adcb, adbc, bdac, bdca, bcda, bcad, cabd, cadb, cbad, cbda, dabc, dacb, dbca, dbac
+	# acbd, adbc, bcad, bdac, dacb, dbca, cadb, cbda
+	# acdb, adcb, bdca, bcda, cabd, cbad, dabc, dbac
 	match move_weight_ver:
 		0:
 			return(letters_to_directions("abcd"))
@@ -971,36 +984,36 @@ func check_move_weight_and_assign_corresponding_direction_move_weight(move_weigh
 			return(letters_to_directions("cdba"))
 		7:
 			return(letters_to_directions("dcba"))
-		8:
+		8: # acbd, adbc, bcad, bdac, dacb, dbca, cadb, cbda
 			return(letters_to_directions("acbd"))
 		9:
-			return(letters_to_directions("acdb"))
-		10:
-			return(letters_to_directions("adcb"))
-		11:
 			return(letters_to_directions("adbc"))
-		12:
-			return(letters_to_directions("bdac"))
-		13:
-			return(letters_to_directions("bdca"))
-		14:
-			return(letters_to_directions("bcda"))
-		15:
+		10:
 			return(letters_to_directions("bcad"))
-		16:
-			return(letters_to_directions("cabd"))
-		17:
-			return(letters_to_directions("cadb"))
-		18:
-			return(letters_to_directions("cbad"))
-		19:
-			return(letters_to_directions("cbda"))
-		20:
-			return(letters_to_directions("dabc"))
-		21:
+		11:
+			return(letters_to_directions("bdac"))
+		12:
 			return(letters_to_directions("dacb"))
-		22:
+		13:
 			return(letters_to_directions("dbca"))
+		14:
+			return(letters_to_directions("cadb"))
+		15:
+			return(letters_to_directions("cbda"))
+		16: # acdb, adcb, bdca, bcda, cabd, cbad, dabc, dbac
+			return(letters_to_directions("acdb"))
+		17:
+			return(letters_to_directions("adcb"))
+		18:
+			return(letters_to_directions("bdca"))
+		19:
+			return(letters_to_directions("bcda"))
+		20:
+			return(letters_to_directions("cabd"))
+		21:
+			return(letters_to_directions("cbad"))
+		22:
+			return(letters_to_directions("dabc"))
 		23:
 			return(letters_to_directions("dbac"))
 	return []
@@ -1031,9 +1044,19 @@ func direction_chooser(array_with_directions: Array[Vector2], which_direction_ar
 	## down, up, left, right
 	## up, down, right, left
 	## down, up, right, left
+	## left up right down
+	## left down right up
+	## right up left down
+	## right down left up
+	## down left up right
+	## down right up left
+	## up left down right
+	## up right down left
 	## the rest because i don't care about mixing the other ones
 	# abcd, bacd, abdc, badc, cdab, dcab, cdba, dcba
-	# acbd, acdb, adcb, adbc, acbd, acdb, adcb, adbc, cabd, cadb, cbad, cbda, dabc, dacb, dbca, dbac
+	# acbd, adbc, bcad, bdac, dacb, dbca, cadb, cbda
+	# acdb, adcb, bdca, bcda, cabd, cbad, dabc, dbac
+	# 
 	# the rest: 
 	# left = a
 	# right = b
@@ -1047,10 +1070,10 @@ func direction_chooser(array_with_directions: Array[Vector2], which_direction_ar
 	# i didn't learn about trees
 	# and factorials
 	# uhh, turns out there was 24 (edit)
-	# a: #abcd, #abdc, acbd, acdb, adcb, adbc
-	# b: #bacd, #badc, bdac, bdca, bcda, bcad
-	# c: cabd, cadb, cbad, cbda, #cdab, #cdba
-	# d: dabc, dacb, #dcab, #dcba, dbca, dbac
+	# a: #abcd, #abdc, #acbd, acdb, adcb, #adbc
+	# b: #bacd, #badc, #bdac, bdca, bcda, #bcad
+	# c: cabd, cbad, #cadb, #cbda, #cdab, #cdba
+	# d: dabc, dbac, #dacb, #dcab, #dcba, #dbca
 	
 	
 	# what the dookie optimization
@@ -1058,7 +1081,7 @@ func direction_chooser(array_with_directions: Array[Vector2], which_direction_ar
 	# i guess i gotta check for inbuilt functions
 	# and occasionally convert back to pseudocode
 	# uh, i don't wanna fix the other stuff right now
-	for direction in which_direction:
+	for direction: Vector2 in which_direction:
 		if array_with_directions.has(direction):
 			print(direction, " chosen to move")
 			return [direction]
@@ -1073,7 +1096,7 @@ func direction_chooser(array_with_directions: Array[Vector2], which_direction_ar
 
 
 ## function for creating the path the turtle will take
-func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_weight_ver: int) -> Array[Vector2]:
+func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_weight_ver: int, max_loop: Array[Vector2]) -> Array[Vector2]:
 	# dang, this function really just does take the grid as its only argument
 	# guess not anymore
 	
@@ -1184,18 +1207,30 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_w
 	## array that holds the sequence of moves
 	var optimize_this_array: Array[Vector2] = []
 	
+	## array doo doo onto
+	var cancel_array: bool = false
+	if !max_loop.has(Vector2(-1, -1)):
+		cancel_array = true
+	
 	## magic
 	## some thing that tells which direction should be chosen
 	## yeah idk what my code does anymore
 	var which_direction: Array[Vector2] = check_move_weight_and_assign_corresponding_direction_move_weight(move_weight_ver)
 	
 	while (tested_position != end) and (loop_iteration_count < max_loop_iterations):
+		if cancel_array and loop_iteration_count >= max_loop.size() + 5:
+			print("cooked :skull:")
+			print("at least this current move weight iteration doesn't matter")
+			# this might slightly be bad for performance btw
+			return [Vector2(-1, -1)]
 		loop_iteration_count += 1 # yeah im just gonna put it at the top
 		print()
 		# uhh, zero indexed, trust?
 		# yeah idk about this actually
 		print()
-		print("loop iteration #: ", loop_iteration_count - 1, " + 1")
+		print("loop iteration #: ", loop_iteration_count, " - 1")
+		if loop_iteration_count == max_loop.size() and cancel_array:
+			print("getting cooked :skull:")
 		print()
 		
 		# this print statement (below) says that because i put another print statement that tells if the function (check available spaces to move to) is running
@@ -1314,6 +1349,7 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_w
 		# is this even possible?
 		return [Vector2(-1, -1)]
 	if tested_position != end:
+		print("no more time")
 		print("cooked :skull:")
 		# heh, heh
 		# time for some recursion
@@ -1351,8 +1387,8 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_w
 	some_array_var_that_receives_optimized_array = optimize_path(optimize_this_array, start)
 	
 	print()
-	print("optimization finished!")
-	print(some_array_var_that_receives_optimized_array)
+	print("optimization finished! ", some_array_var_that_receives_optimized_array)
+	#print(some_array_var_that_receives_optimized_array)
 	return some_array_var_that_receives_optimized_array
 
 
@@ -1360,17 +1396,27 @@ func generate_path(grid: Array[Array], max_loop_iterations_argument: int, move_w
 ## the day "generate_path" stopped being the "main" function
 func compare_paths_move_weight(grid: Array[Array], lower_function_loop_iterations: int, move_weight_amount_checked: int) -> Array[Vector2]:
 	var move_weight_ver: int = 0
-	var dict: Dictionary = {}
+	## random dictionary
+	var dict: Dictionary[int, Array] = {}
+	## cooked by default
+	var least_solved: Array[Vector2] = [Vector2(-1, -1)]
 	
 	# what am i typing
-	for x in move_weight_amount_checked:
-		dict[x] = generate_path(grid, lower_function_loop_iterations, move_weight_ver)
-	var least_array = dict[0]
-	for key in dict:
-		if dict[key].size() < least_array.size():
-			least_array = dict[key]
+	for x: int in move_weight_amount_checked:
+		print()
+		print("start of the move weight looping...")
+		print("array with the least amount of values for the path", least_solved)
+		# let's see this logic...
+		# so we return some array, i'm pretty sure failsafe will make it have Vector2(-1, -1) if it fails
+		# and then if there's successful path, we can assign least_solved to it
+		# if the path is bad, having Vector2(-1, -1), then we just don't assign least_solved to it
+		dict[x] = generate_path(grid, lower_function_loop_iterations, move_weight_ver, least_solved)
+		if !dict[x].has(Vector2(-1, -1)):
+			least_solved = dict[x]
 	
-	return least_array
+	
+	
+	return least_solved
 
 
 
@@ -1381,7 +1427,8 @@ func _run() -> void:
 		print()
 	print("running...")
 	
-	var turtle_path: Array[Vector2] = generate_path(grid_of_area, 75, 0) # compare_paths_move_weight(grid_of_area, 75, 4)
+	#var turtle_path: Array[Vector2] = generate_path(grid_of_area, 75, 0)
+	var turtle_path: Array[Vector2] = compare_paths_move_weight(grid_of_area, 75, 15)
 	print(turtle_path)
 	# i should make some visuals for this
 	# just like grids of letters and numbers separated by print() that you have to scroll through
