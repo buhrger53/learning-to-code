@@ -1,7 +1,8 @@
 @tool
 extends EditorScript
 
-
+# yeah i'm not gonna update this anymore
+# probably
 # maybe try some stuff with flattened 1d arrays?
 # yeah the turtle is kind of fictional
 ## random grid that we should try to pathfind through.
@@ -1428,8 +1429,8 @@ func _run() -> void:
 	print("running...")
 	
 	#var turtle_path: Array[Vector2] = generate_path(grid_of_area, 75, 0)
-	var turtle_path: Array[Vector2] = compare_paths_move_weight(grid_of_area, 75, 15)
-	print(turtle_path)
+	#var turtle_path: Array[Vector2] = compare_paths_move_weight(grid_of_area, 75, 15)
+	#print(turtle_path)
 	# i should make some visuals for this
 	# just like grids of letters and numbers separated by print() that you have to scroll through
 	# to see the process of the "turtle" moving
