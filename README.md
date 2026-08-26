@@ -39,8 +39,10 @@ i just partially used the "conventional commits" style
 `refactor:` rewriting/simplifying code, but it still does the same thing <br>
 `docs:` changing comments for code, but it could also be for changing general documentation in .txt or .md files <br>
 `style:` formatting some things, like brackets or whitespace <br>
+`chore:` doing some random thing that counts as changes (i included this cuz i had to move a file) <br>
+`revert:` for when you revert a change <br>
 
 commit summary: `<commit type>: <short description of the purpose of the changes in the commit>` <br>
-commit description: with either hyphens to list things, put `<more specific change>: <what changed>` if you have changed multiple things
+commit description: with either hyphens to list things, put `<more specific change>: <what changed>` if you changed multiple things <br>
 
 imperative form should also be used for consistency when talking about changes
