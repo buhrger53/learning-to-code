@@ -22,3 +22,6 @@ mono_crash.*.json
 # System specific ignores
 .DS_Store
 Thumbs.db
+
+# godot unit test config
+gut_editor_config.json
