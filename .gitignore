@@ -18,3 +18,7 @@ mono_crash.*.json
 
 # uh i used vscode rn (i don't think this one is required)
 .vscode
+
+# System specific ignores
+.DS_Store
+Thumbs.db
