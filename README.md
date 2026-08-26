@@ -43,6 +43,6 @@ i just partially used the "conventional commits" style
 `revert:` for when you revert a change <br>
 
 commit summary: `<commit type>: <short description of the purpose of the changes in the commit>` <br>
-commit description: with either hyphens to list things, put `<more specific change>: <what changed>` if you changed multiple things <br>
+commit description: with either hyphens to list things, put `- <more specific change>: <what changed>` if you changed multiple things <br>
 
 imperative form should also be used for consistency when talking about changes
