@@ -33,4 +33,5 @@ jobs:
 
             # turns out we use gut
             - name: run godot tests
-              run: godot --headless -s res://addons/gut/gut_cmdline.gd
+            # i'm cooked
+              run: godot --headless -s res://addons/gut/gut_cmdln.gd
