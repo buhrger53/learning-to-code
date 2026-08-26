@@ -16,6 +16,7 @@ new branches can't be pushed unless they contain these prefixes:
 *   `bugfix/name-of-the-fix`, which is used for fixing bugs or resolving errors
 *   `refactor/what-is-being-changed`, which is used for simplifying/updating the logic, changing the formatting, or rewording the/adding new comments of the code
 *   `docs/document-name`, which is for adding new documentation or things related to that
+*   `experiment/what-you're-testing`, which is for doing random things and testing, without a clear idea in mind like feature could be
 
 ## how to add changes to the project:
 1. make a branch that follows the naming rules
@@ -42,6 +43,7 @@ i just partially used the "conventional commits" style
 `chore:` doing some random thing that counts as changes (i included this cuz i had to move a file) <br>
 `revert:` for when you revert a change <br>
 `test:` for doing stuff with automated testing <br>
+`experiment:` random testing for ideas (optionally) <br>
 
 commit summary: `<commit type>: <short description of the purpose of the changes in the commit>` <br>
 commit description: with either hyphens to list things, put `- <more specific change>: <what changed>` if you changed multiple things <br>
