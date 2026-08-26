@@ -1,6 +1,7 @@
 # learning_to_code
 
 repository about learning to code in godot but also learning about some things in github, along with some practices or customs
+<br>
 i use github desktop, so i didn't memorize the terminal commands
 
 
@@ -28,17 +29,18 @@ new branches can't be pushed unless they contain these prefixes:
 ## committing changes:
 
 for organizational purposes and a way to see the general category the changes of the commit are considered, the summary and description of the commit are formatted a specific way
+<br>
 i just partially used the "conventional commits" style
 
 ## how commit messages are formatted:
 
-`feat:` new features or functionalities
-`fix:` bugfix
-`refactor:` rewriting/simplifying code, but it still does the same thing
-`docs:` changing comments for code, but it could also be for changing general documentation in .txt or .md files
-`style:` formatting some things, like brackets or whitespace
+`feat:` new features or functionalities <br>
+`fix:` bugfix <br>
+`refactor:` rewriting/simplifying code, but it still does the same thing <br>
+`docs:` changing comments for code, but it could also be for changing general documentation in .txt or .md files <br>
+`style:` formatting some things, like brackets or whitespace <br>
 
-commit summary: `<commit type>: <short description of the purpose of the changes in the commit>`
+commit summary: `<commit type>: <short description of the purpose of the changes in the commit>` <br>
 commit description: with either hyphens to list things, put `<more specific change>: <what changed>` if you have changed multiple things
 
 imperative form should also be used for consistency when talking about changes
