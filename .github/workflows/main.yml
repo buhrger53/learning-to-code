@@ -1,1 +1,36 @@
+name: godot script ci
 
+on:
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
+
+
+jobs:
+    test-test:
+        runs-on: ubuntu-latest
+
+        steps:
+            # get code
+            - name: checkout
+              uses: actions/checkout@4
+            
+
+            # "pre made godot environment tool"
+            # - name: godot setup
+            #   uses: ammarahm-ed/godot-action@v1
+            #   with:
+            #     godot-version: "4.7.1"
+
+            # other godot tool that has c# magic too
+            - name: c# godot set up
+              uses: chickensoft-games/setup-godot@v2
+              with:
+                version: "4.7.1"
+                use-dotnet: false # press true when using c#
+
+
+            # turns out we use gut
+            - name: run godot tests
+              run: godot --headless -s res://addons/gut/gut_cmdline.gd
