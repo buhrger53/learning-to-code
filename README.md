@@ -17,7 +17,7 @@ new branches can't be pushed unless they contain these prefixes:
 *   `refactor/what-is-being-changed`, which is used for simplifying/updating the logic, changing the formatting, or rewording the/adding new comments of the code
 *   `docs/document-name`, which is for adding new documentation or things related to that
 *   `experiment/what-you're-testing`, which is for doing random things and testing, without a clear idea in mind like feature could be
-*   `test/name-of-thing-for-tests`, which i just added because i don't think tests would fix into the other branches
+*   `test/name-of-thing-for-tests`, which i just added because i don't think tests would fit into the other branches
 
 ## how to add changes to the project:
 1. make a branch that follows the naming rules
