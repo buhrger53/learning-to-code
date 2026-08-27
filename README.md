@@ -1,4 +1,4 @@
-# learning_to_code
+# learning-to-code
 
 repository about learning to code in godot but also learning about some things in github, along with some practices or customs
 <br>
