@@ -47,6 +47,7 @@ i just partially used the "conventional commits" style
 `experiment:` random testing for ideas (optionally) <br>
 
 commit summary: `<commit type>: <short description of the purpose of the changes in the commit>` <br>
-commit description: with either hyphens to list things, put `- <more specific change>: <what changed>` if you changed multiple things <br>
+commit description: `- <more specific type>: <what changed>` if you changed multiple things <br>
+(for some reason i just decided to put whatever in the description, but it has hyphens)
 
 imperative form should also be used for consistency when talking about changes
