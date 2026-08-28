@@ -6,47 +6,37 @@ var speed: int = 400
 ## rotation speed in radians ps
 var angular_speed: float = PI
 ## variable to apply velocity to position
-var velocity: Vector2
-## is the direction 1 or -1
-var direction: Vector2
+var velocity: Vector2 = Vector2.ZERO
 
-# runs on initiation of the Sprite2D node
+var timer_time_check_amount_seconds: float = 0
+
+var uprightdownleft: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+
+# runs on initialization of the Sprite2D node
 func _init() -> void: 
 	# idk
 	print("hello world")
 
+func _ready() -> void:
+	var timer: Node = get_node("Timer")
+	if not timer: return
+	timer.timeout.connect(_on_timer_timeout)
+
+
 # runs every frame
-func _process(delta: float) -> void: 
-	velocity = Vector2.ZERO
-	
-	for string: StringName in ["ui_left", "ui_right", "ui_up", "ui_down"]:
-		match string:
-			"ui_left":
-				direction = Vector2.LEFT
-			"ui_right":
-				direction = Vector2.RIGHT
-			"ui_up":
-				direction = Vector2.UP
-			"ui_down":
-				direction = Vector2.DOWN
-		if Input.is_action_pressed(string):
-			velocity = direction * speed
+func _process(delta: float) -> void:
+	uprightdownleft = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	velocity = uprightdownleft.normalized()
 	
 	
 	
-	position += velocity * delta
+	
+	position += velocity * speed * delta
 
-func _unhandled_input(event: InputEvent) -> void:
-	print("event gotten")
-	# what was the other way to uh get the things?
-	if event.as_text() == "Alt":
-		print("alt pressed")
-	if event is InputEventKey:
-		handle_keys(event)
 
-func handle_keys(key: InputEventKey) -> void:
-	match key.keycode:
-		KEY_SPACE when key.pressed:
-			print("space")
-		KEY_SPACE when not key.pressed:
-			print("unspace")
+func _on_button_pressed() -> void:
+	set_process(not is_processing())
+
+
+func _on_timer_timeout() -> void:
+	visible = not visible
