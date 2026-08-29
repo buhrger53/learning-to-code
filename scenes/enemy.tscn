@@ -44,11 +44,7 @@ animations = [{
 "speed": 3.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_j0cyh"]
-radius = 32.0
-height = 80.0
-
-[node name="Enemy" type="RigidBody2D" unique_id=544538565]
+[node name="Enemy" type="RigidBody2D" unique_id=544538565 groups=["enemies"]]
 collision_mask = 0
 gravity_scale = 0.0
 script = ExtResource("1_nenq2")
@@ -59,10 +55,11 @@ scale = Vector2(0.75, 0.75)
 sprite_frames = SubResource("SpriteFrames_imcyi")
 animation = &"fly"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1417314875]
-rotation = 1.5707964
-shape = SubResource("CapsuleShape2D_j0cyh")
-
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1374986535]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1707989387]
+position = Vector2(12, 0)
+scale = Vector2(2.35, 2.35)
+polygon = PackedVector2Array(5.1063833, -7.6595745, 8.510638, 0, 5.1063833, 8.085107, -11.914894, 10.212767, -8.510639, 0, -11.914894, -10.212767)
 
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

@@ -7,9 +7,9 @@
 
 [sub_resource type="Curve2D" id="Curve2D_o5qli"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 480, 0, 0, 0, 0, 0, 480, 780, 0, 0, 0, 0, 0, 780, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+"points": PackedVector2Array(0, 0, 0, 0, -24.000002, -24.000002, 0, 0, 0, 0, 487.75388, -24.000002, 0, 0, 0, 0, 487.75388, 780.0001, 0, 0, 0, 0, -24.000002, 780.0001, 0, 0, 0, 0, -24.000002, -24.000002)
 }
-point_count = 6
+point_count = 5
 
 [node name="Main" type="Node" unique_id=99755732]
 script = ExtResource("1_0wfyh")
@@ -30,9 +30,12 @@ one_shot = true
 position = Vector2(240, 450)
 
 [node name="EnemyPath" type="Path2D" parent="." unique_id=150485902]
+position = Vector2(0.76190567, 0.59701335)
+scale = Vector2(1.031746, 1.0248755)
 curve = SubResource("Curve2D_o5qli")
 
 [node name="EnemySpawnLocation" type="PathFollow2D" parent="EnemyPath" unique_id=620777104]
+position = Vector2(-24.000002, -24.000002)
 
 [node name="HUD" parent="." unique_id=1792457549 instance=ExtResource("4_jyhfs")]
 

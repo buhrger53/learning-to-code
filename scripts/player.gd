@@ -3,6 +3,12 @@ extends Area2D
 
 signal hit
 
+enum LeftRightLook {
+	LEFT = -1,
+	RIGHT =  1,
+}
+var left_right_look: LeftRightLook = LeftRightLook.RIGHT
+
 
 ## speed variable that can be changed in inspector
 ## i have to read the style guide
@@ -26,6 +32,9 @@ func _ready() -> void:
 	hide()
 	screen_size = get_viewport_rect().size
 
+## random variable for animation stuff
+var last_velocity: Vector2 = Vector2.ZERO
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -40,10 +49,33 @@ func _process(delta: float) -> void:
 		if animated_sprite_2d: animated_sprite_2d.play()
 	else:
 		if animated_sprite_2d: animated_sprite_2d.stop()
+	
+	## dookie
+	## braindead logic
+	## why did this work?
+	if (
+		(last_velocity == Vector2.ZERO or last_velocity.x != 0)
+		and velocity != Vector2.ZERO and velocity.x != 0
+	):
+		if velocity.x < 0:
+			left_right_look = LeftRightLook.LEFT
+		else:
+			left_right_look = LeftRightLook.RIGHT
+
+	## backup
+	if velocity == Vector2.ZERO and last_velocity != Vector2.ZERO and last_velocity.x != 0:
+		if last_velocity.x < 0:
+			left_right_look = LeftRightLook.LEFT
+		else:
+			left_right_look = LeftRightLook.RIGHT
 
 	if velocity == Vector2.ZERO:
 		animated_sprite_2d.animation = "walk"
 		animated_sprite_2d.flip_v = false
+		if left_right_look == -1:
+			animated_sprite_2d.flip_h = true
+		else:
+			animated_sprite_2d.flip_h = false
 	
 	if animated_sprite_2d:
 		if velocity.x != 0:
@@ -60,14 +92,16 @@ func _process(delta: float) -> void:
 	
 	position += velocity * delta
 	position.clamp(Vector2.ZERO, screen_size)
+	
+	last_velocity = velocity
 
 
 func _on_body_entered(_body: Node2D) -> void:
 	hide()
 	hit.emit()
-	$CollisionShape2D.set_deferred("disabled", true)
+	$CollisionPolygon2D.set_deferred("disabled", true)
 
 func start(pos: Vector2) -> void:
 	position = pos
 	show()
-	$CollisionShape2D.disabled = false
+	$CollisionPolygon2D.disabled = false

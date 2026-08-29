@@ -31,9 +31,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_44opq"]
-size = Vector2(41, 49)
-
 [node name="Player" type="Area2D" unique_id=258633803]
 script = ExtResource("1_qlg0r")
 metadata/_edit_group_ = true
@@ -44,8 +41,9 @@ sprite_frames = SubResource("SpriteFrames_imcyi")
 animation = &"walk"
 frame_progress = 0.82426226
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=954783366]
-position = Vector2(0.5, -4.5)
-shape = SubResource("RectangleShape2D_44opq")
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=225780565]
+position = Vector2(0, 2.154739)
+scale = Vector2(1, 1.0188508)
+polygon = PackedVector2Array(-5, -16, -15, -9, -16, 2, -13.688946, 8.470955, -6, 15, 7.278145, 13.524654, 14, 6, 16, -2, 12, -11, 4.0721245, -16.285252)
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
