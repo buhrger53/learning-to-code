@@ -1,5 +1,9 @@
 extends Area2D
 
+
+signal hit
+
+
 ## speed variable that can be changed in inspector
 ## i have to read the style guide
 ## maybe?
@@ -14,7 +18,7 @@ var move_direction: Vector2
 
 var velocity: Vector2
 
-@onready var animated_sprite_2d: Node = $AnimatedSprite2D
+@onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 
 
 # Called when the node enters the scene tree for the first time.
@@ -56,3 +60,14 @@ func _process(delta: float) -> void:
 	
 	position += velocity * delta
 	position.clamp(Vector2.ZERO, screen_size)
+
+
+func _on_body_entered(body: Node2D) -> void:
+	hide()
+	hit.emit()
+	$CollisionShape2D.set_deferred("disabled", true)
+
+func start(pos: Vector2) -> void:
+	position = pos
+	show()
+	$CollisionShape2D.disabled = false
