@@ -17,11 +17,14 @@ func _ready() -> void:
 func game_over() -> void:
 	$ScoreTimer.stop()
 	$EnemyTimer.stop()
+	$HUD.show_game_over()
 
 func new_game() -> void:
 	score = 0
 	$Player.start($StartPosition.position)
 	$StartTimer.start()
+	$HUD.update_score(score)
+	$HUD.show_message("ready up")
 
 
 func _on_enemy_timer_timeout() -> void:
@@ -49,6 +52,7 @@ func _on_enemy_timer_timeout() -> void:
 
 func _on_score_timer_timeout() -> void:
 	score += 1
+	$HUD.update_score(score)
 
 
 func _on_start_timer_timeout() -> void:
