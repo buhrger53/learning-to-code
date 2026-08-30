@@ -22,9 +22,14 @@ func _ready() -> void:
 
 @onready var start_position := $StartPosition as Marker2D
 
+@onready var music := $Music as AudioStreamPlayer
+@onready var death_sound := $DeathSound as AudioStreamPlayer
+
 
 
 func game_over() -> void:
+	music.stop()
+	death_sound.play()
 	score_timer.stop()
 	enemy_timer.stop()
 	hud.show_game_over()
@@ -32,6 +37,7 @@ func game_over() -> void:
 func new_game() -> void:
 	score = 0
 	player.start(start_position.position)
+	music.play()
 
 	get_tree().call_group("enemies", "queue_free")
 
