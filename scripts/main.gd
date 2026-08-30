@@ -1,5 +1,6 @@
 extends Node
 
+
 @export var enemy_scene: PackedScene
 var score: int
 
@@ -13,19 +14,30 @@ func _ready() -> void:
 # func _process(delta: float) -> void:
 # 	pass
 
+@onready var player := $Player as Player
+@onready var hud := $HUD as HUD
+@onready var score_timer := $ScoreTimer as Timer
+@onready var enemy_timer := $EnemyTimer as Timer
+@onready var start_timer := $StartTimer as Timer
+
+@onready var start_position := $StartPosition as Marker2D
+
+
 
 func game_over() -> void:
-	$ScoreTimer.stop()
-	$EnemyTimer.stop()
-	$HUD.show_game_over()
+	score_timer.stop()
+	enemy_timer.stop()
+	hud.show_game_over()
 
 func new_game() -> void:
 	score = 0
-	$Player.start($StartPosition.position)
+	player.start(start_position.position)
+
 	get_tree().call_group("enemies", "queue_free")
-	$StartTimer.start()
-	$HUD.update_score(score)
-	$HUD.show_message("ready up")
+
+	start_timer.start()
+	hud.update_score(score)
+	hud.show_message("ready up")
 
 
 func _on_enemy_timer_timeout() -> void:
@@ -64,9 +76,9 @@ func _on_enemy_timer_timeout() -> void:
 
 func _on_score_timer_timeout() -> void:
 	score += 1
-	$HUD.update_score(score)
+	hud.update_score(score)
 
 
 func _on_start_timer_timeout() -> void:
-	$EnemyTimer.start()
-	$ScoreTimer.start()
+	enemy_timer.start()
+	score_timer.start()

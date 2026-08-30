@@ -27,6 +27,7 @@ var move_direction: Vector2
 var velocity: Vector2
 
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
+@onready var collision_polygon_2d := $CollisionPolygon2D as CollisionPolygon2D
 
 
 # Called when the node enters the scene tree for the first time.
@@ -101,9 +102,9 @@ func _process(delta: float) -> void:
 func _on_body_entered(_body: Node2D) -> void:
 	hide()
 	hit.emit()
-	$CollisionPolygon2D.set_deferred("disabled", true)
+	collision_polygon_2d.set_deferred("disabled", true)
 
 func start(pos: Vector2) -> void:
 	position = pos
 	show()
-	$CollisionPolygon2D.disabled = false
+	collision_polygon_2d.disabled = false
